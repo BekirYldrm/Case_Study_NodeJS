@@ -2,9 +2,10 @@ import mongoose from "mongoose";
 
 const mapsSchema =new mongoose.Schema({
     
-        latiude: Number,
+        latitude: Number,
         longitude : Number,
         radius : Number,
+        results : Array
 })
 
 const mapsModel = mongoose.model("Map", mapsSchema);
