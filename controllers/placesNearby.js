@@ -3,6 +3,7 @@ import { Client } from "@googlemaps/google-maps-services-js";
 import { config } from "dotenv";
 import bodyParser from "body-parser";
 import mapsModel from "../models/mapsModel.js";
+import cors from "cors"
 
 config();
 
@@ -11,22 +12,28 @@ const router = Router();
 
 router
     .use(bodyParser.urlencoded({ extended: true }))
+    .use(cors())
 
-    .get("/placesNearby", (req, res) => {
+    .get("/", (req, res) => {
+        const lat = req.query.lat;
+        const long = req.query.long;
+        const rad = req.query.rad;
 
         mapsModel
-            .findOne({ latitude:33.8670522, longitude:151.1957362 , radius:150000 })
+            .findOne({ latitude: { lat }, longitude: { long }, radius: { rad } })
+
             .then(foundData => {
                 if (foundData) {
-                    res.send(foundData)
+                    res.json(foundData.results);
+                    console.log(foundData.results);
+
                 }
                 else {
                     client
-
                         .placesNearby({
                             params: {
-                                location: { latitude: 33.8670522, longitude: 151.1957362 },
-                                radius: 150000,
+                                location: { latitude: { lat }, longitude: { long } },
+                                radius: { rad },
                                 key: process.env.API_KEY,
                             }
                         })
@@ -34,7 +41,7 @@ router
                         .then((responseAPI) => {
 
                             res.json(responseAPI.data.results)
-                            const resultsAPI = responseAPI.data.results; 
+                            const resultsAPI = responseAPI.data.results;
                             const paramsAPI = responseAPI.config.params;
 
                             const newData = new mapsModel({
