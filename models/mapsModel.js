@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const mapsSchema =new mongoose.Schema({
     
         latitude: Number,
