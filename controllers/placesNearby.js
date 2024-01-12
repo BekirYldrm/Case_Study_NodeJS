@@ -25,7 +25,7 @@ router
             .then(foundData => {
                 if (foundData) {
                     res.json(foundData.results);
-                    console.log(foundData.results);
+                    
 
                 }
                 else {
